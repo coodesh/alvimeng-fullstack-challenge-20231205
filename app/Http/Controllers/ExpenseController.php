@@ -2,47 +2,60 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Expense;
+use App\Services\ExpenseService;
+use App\Http\Requests\StoreOrUpdateExpenseRequest;
+use App\Http\Resources\ExpenseResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $expenseService;
+
+    public function __construct(ExpenseService $expenseService)
+    {
+        $this->expenseService = $expenseService;
+    }
+
     public function index()
     {
-        //
+        $userId = Auth::id();
+        $expenses = $this->expenseService->getAllExpenses($userId);
+        return ExpenseResource::collection($expenses);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+
+    public function store(StoreOrUpdateExpenseRequest $request)
+    {    
+        $userId = Auth::id();
+        $expense = $this->expenseService->storeExpense($request->validated(), $userId);
+        
+        return new ExpenseResource($expense);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Expense $expense)
     {
-        //
+        $this->authorize('view', $expense);
+
+        $expense = $this->expenseService->getExpenseById($expense->id);
+        return new ExpenseResource($expense);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(StoreOrUpdateExpenseRequest $request, Expense $expense)
     {
-        //
+        $this->authorize('update', $expense);
+
+        $updatedExpense = $this->expenseService->updateExpense($request->validated(), $expense);
+        return new ExpenseResource($updatedExpense);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Expense $expense)
     {
-        //
+        $this->authorize('destroy', $expense);
+        
+        $this->expenseService->deleteExpense($expense);
+        return response()->json(null, 204);
     }
+
 }
