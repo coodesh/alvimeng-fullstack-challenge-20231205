@@ -15,4 +15,20 @@ class UserAuthService
             'password' => Hash::make($userData['password']),
         ]);
     }
+
+    public function loginUser(array $loginData)
+    {
+        $user = User::where('email', $loginData['email'])->first();
+
+        if (!$user || !Hash::check($loginData['password'], $user->password)) {
+            return null;
+        }
+
+        return $user->createToken($user->name . '-AuthToken')->plainTextToken;
+    }
+    
+    public function logoutUser($user)
+    {
+        $user->tokens()->delete();
+    }
 }
