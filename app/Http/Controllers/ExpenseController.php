@@ -8,6 +8,7 @@ use App\Http\Requests\StoreOrUpdateExpenseRequest;
 use App\Http\Resources\ExpenseResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\ExpenseCreatedNotification;
 
 class ExpenseController extends Controller
 {
@@ -28,9 +29,10 @@ class ExpenseController extends Controller
 
     public function store(StoreOrUpdateExpenseRequest $request)
     {    
-        $userId = Auth::id();
-        $expense = $this->expenseService->storeExpense($request->validated(), $userId);
+        $user = Auth::user();
+        $expense = $this->expenseService->storeExpense($request->validated(), $user->id);
         
+        $user->notify(new ExpenseCreatedNotification($expense));
         return new ExpenseResource($expense);
     }
 
