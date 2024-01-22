@@ -38,7 +38,7 @@ export default {
       try {
         await AuthService.login(this.loginData);
         axiosConfig();
-        this.$inertia.visit('/manage');
+        this.$inertia.visit('/expenses');
 
       } catch (error) {
         console.error(error);
