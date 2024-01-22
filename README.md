@@ -56,3 +56,5 @@ npm run dev
 - [Form Request](https://laravel.com/docs/10.x/validation#creating-form-requests)
 - [Install Quasar in Laravel](https://www.youtube.com/watch?v=nR_2EfV43-4&t=1161s&ab_channel=LaraPhant)
 - [Quasar components](https://quasar.dev/)
+
+>  This is a challenge by [Coodesh](https://coodesh.com/)
