@@ -13,6 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function () { return Inertia('Login'); });
+Route::get('/register', function () { return Inertia('Register'); });
