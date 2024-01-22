@@ -1,11 +1,12 @@
 <script setup>
-  import GuestLayout from '@/Layouts/AuthLayout.vue';
-  import ExpenseService from '@/services/expenseService'
+import GuestLayout from '@/Layouts/AuthLayout.vue';
+import ExpenseService from '@/services/expenseService'
 </script>
 
 <template>
   <GuestLayout>
     <q-card class="q-ma-xl">
+      <q-btn color="primary" class="q-ma-sm" label="Register new Expense" @click="createExpense" />
       <q-table
         :rows="dados"
         :columns="colunas"
@@ -36,8 +37,11 @@ export default {
     };
   },
   methods: {
+    createExpense() {
+      this.$inertia.visit('/expenses/create');
+    },
     edit(row) {
-      console.log(row);
+      this.$inertia.visit('/expenses/edit/'+ row.id);
     },
     destroy(row) {
       ExpenseService.destroyExpense(row.id)
